@@ -13,16 +13,17 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
+          cache: 'pnpm'
 
+      - name: Enable pnpm
+        run: corepack enable
 
-      - name: Install Node dependencies
-        run: |
-          cd services/service_clients && npm ci
-          cd ../service_commande && npm ci
-          cd ../service_produits && npm ci
+      - name: Install dependencies
+        run: pnpm install
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
 
-      - name: Run Node tests
-        run: |
-          cd services/service_clients && npm test
-          cd ../service_commande && npm test
-          cd ../service_produits && npm test
+      - name: Run tests
+        run: pnpm -r test
