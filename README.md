@@ -1,8 +1,13 @@
-# Plateforme Payetonkawa
+This repository contains a simple platform composed of three microservices that communicate via Kafka.  The codebase is organised as a **pnpm monorepo** so all services share their dependencies and tooling.  Each service exposes a small REST API and can be run locally using Docker Compose or directly with Node.js.
 
-Ce dépôt contient une plateforme de démonstration composée de trois microservices communiquant via Kafka. Le projet est organisé comme un **monorepo pnpm**. Chaque service expose une petite API REST et peut être exécuté localement à l'aide de Docker Compose ou directement avec Node.js.
+- [pnpm](https://pnpm.io/) (install with `corepack enable` or `npm install -g pnpm` if it isn't already available)
 
-## Services
+   You can also run a single service locally with pnpm:
+   ```bash
+   pnpm --filter <service_name> dev
+   ```
+
+3. Développez puis vérifiez votre code avec `pnpm -r test` pour vous assurer que l'ensemble des services passent les tests.
 
 | Service              | Stack technique  | Port | Description |
 |----------------------|------------------|------|-------------|
