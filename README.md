@@ -1,6 +1,6 @@
 # Payetonkawa Platform
 
-This repository contains a demonstration platform composed of three microservices communicating through Kafka. Each service exposes a small REST API and can be run locally using Docker Compose.
+This repository contains a demonstration platform composed of three microservices communicating through Kafka.  The project is organised as a **pnpm monorepo**.  Each service exposes a small REST API and can be run locally using Docker Compose or directly with Node.js.
 
 ## Services
 
@@ -14,14 +14,13 @@ This repository contains a demonstration platform composed of three microservice
 
 - Docker and Docker Compose installed
 - Node.js 18+ if you want to run services without Docker
+- [pnpm](https://pnpm.io/) (install with `corepack enable` or `npm install -g pnpm`)
 
 ## Getting Started
 
 1. **Install dependencies for local development** (requires Internet access):
    ```bash
-   cd services/service_clients && npm ci
-   cd ../service_commande && npm ci
-   cd ../service_produits && npm ci
+   pnpm install
    ```
 
 2. **Run all services with Docker Compose**:
@@ -32,9 +31,7 @@ This repository contains a demonstration platform composed of three microservice
 
 3. **Run tests**:
    ```bash
-   cd services/service_clients && npm test
-   cd ../service_commande && npm test
-   cd ../service_produits && npm test
+   pnpm -r test
    ```
 
 ## Basic API Usage
@@ -57,6 +54,16 @@ The project uses GitHub Actions for continuous integration.
 Each service has its own workflow that runs its test suite when changes to that
 service are pushed. When a pull request is opened, a dedicated workflow executes
 the tests for all services to validate the full stack.
+
+## Workflow for contributors
+
+1. Créez une branche depuis `main` pour vos évolutions :
+   ```bash
+   git checkout -b ma-fonctionnalite
+   ```
+2. Exécutez `pnpm install` pour installer les dépendances si nécessaire.
+3. Développez puis vérifiez votre code avec `pnpm -r test`.
+4. Commitez et poussez votre branche avant d'ouvrir une Pull Request.
 
 ---
 This project is a simplified starting point designed for educational purposes.

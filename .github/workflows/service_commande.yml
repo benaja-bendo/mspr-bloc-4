@@ -14,11 +14,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: 18
-      - name: Install dependencies
-        run: |
-          cd services/service_commande
-          npm ci
+          cache: 'pnpm'
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 8
+          run_install: true
       - name: Run tests
-        run: |
-          cd services/service_commande
-          npm test
+        run: pnpm --filter service_commande test
