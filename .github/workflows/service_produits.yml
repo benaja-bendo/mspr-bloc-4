@@ -1,0 +1,23 @@
+name: Service Produits CI
+
+on:
+  push:
+    paths:
+      - 'services/service_produits/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        run: |
+          pip install -r services/service_produits/requirements.txt
+      - name: Run tests
+        run: |
+          cd services/service_produits
+          pytest

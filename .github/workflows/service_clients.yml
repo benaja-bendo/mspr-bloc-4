@@ -1,0 +1,24 @@
+name: Service Clients CI
+
+on:
+  push:
+    paths:
+      - 'services/service_clients/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: |
+          cd services/service_clients
+          npm ci
+      - name: Run tests
+        run: |
+          cd services/service_clients
+          npm test

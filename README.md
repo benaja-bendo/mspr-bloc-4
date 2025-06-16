@@ -56,7 +56,10 @@ A `/health` endpoint is also exposed on each service.
 
 ## CI/CD
 
-A GitHub Actions workflow installs dependencies and runs the test suites for all services on every push or pull request.
+The project uses GitHub Actions for continuous integration.
+Each service has its own workflow that runs its test suite when changes to that
+service are pushed. When a pull request is opened, a dedicated workflow executes
+the tests for all services to validate the full stack.
 
 ---
 This project is a simplified starting point designed for educational purposes.
