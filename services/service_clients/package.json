@@ -1,17 +1,28 @@
 {
   "name": "service_clients",
   "version": "0.1.0",
-  "main": "index.js",
+  "main": "dist/index.js",
   "license": "MIT",
+  "type": "module",
   "scripts": {
-    "start": "node index.js",
-    "test": "jest"
+    "build": "tsc",
+    "start": "node dist/index.js",
+    "dev": "tsx watch src/index.ts",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage"
   },
   "dependencies": {
     "express": "^4.18.2"
   },
   "devDependencies": {
-    "jest": "^29.6.1",
-    "supertest": "^6.3.3"
+    "@types/express": "^4.17.21",
+    "@types/node": "^20.10.5",
+    "@types/supertest": "^2.0.16",
+    "@vitest/coverage-v8": "^1.1.0",
+    "supertest": "^6.3.3",
+    "tsx": "^4.6.2",
+    "typescript": "^5.3.3",
+    "vitest": "^1.1.0"
   }
 }
