@@ -1,0 +1,40 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install Node dependencies
+        run: |
+          cd services/service_clients && npm ci
+          cd ../service_commande && npm ci
+
+      - name: Install Python dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r services/service_produits/requirements.txt
+
+      - name: Run Node tests
+        run: |
+          cd services/service_clients && npm test
+          cd ../service_commande && npm test
+
+      - name: Run Python tests
+        run: |
+          cd services/service_produits && pytest
