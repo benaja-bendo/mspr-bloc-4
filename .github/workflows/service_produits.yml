@@ -1,0 +1,24 @@
+name: Service Produits CI
+
+on:
+  push:
+    paths:
+      - 'services/service_produits/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Node
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18
+      - name: Install dependencies
+        run: |
+          cd services/service_produits
+          npm ci
+      - name: Run tests
+        run: |
+          cd services/service_produits
+          npm test
