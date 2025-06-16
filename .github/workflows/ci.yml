@@ -15,10 +15,14 @@ jobs:
           node-version: 18
           cache: 'pnpm'
 
-      - name: Enable pnpm
-        run: |
-          corepack enable
-          corepack prepare pnpm@8.15.5 --activate
+      - name: Install pnpm
+        run: npm install -g pnpm
+
+      # Optionally, you can keep or remove corepack steps if not needed
+      # - name: Enable pnpm with corepack
+      #   run: |
+      #     corepack enable
+      #     corepack prepare pnpm@8.15.5 --activate
 
       - uses: pnpm/action-setup@v2
         with:
