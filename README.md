@@ -17,10 +17,10 @@ This repository contains a demonstration platform composed of three microservice
 
 ## Getting Started
 
-1. **Install dependencies for local development**:
+1. **Install dependencies for local development** (requires Internet access):
    ```bash
-   cd services/service_clients && npm install
-   cd ../service_commande && npm install
+   cd services/service_clients && npm ci
+   cd ../service_commande && npm ci
    cd ../service_produits && pip install -r requirements.txt
    ```
 
