@@ -16,9 +16,10 @@ jobs:
           node-version: 18
           cache: 'pnpm'
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 8
-          run_install: true
+      - name: Enable pnpm
+        run: corepack enable
+
+      - name: Install dependencies
+        run: pnpm install
       - name: Run tests
         run: pnpm --filter service_commande test

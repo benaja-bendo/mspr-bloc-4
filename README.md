@@ -2,16 +2,22 @@ This repository contains a simple platform composed of three microservices that 
 
 - [pnpm](https://pnpm.io/) (install with `corepack enable` or `npm install -g pnpm` if it isn't already available)
 
-   You can also run a single service locally with pnpm:
+1. **Enable pnpm via Corepack** (only once):
    ```bash
-   pnpm --filter <service_name> dev
+   corepack enable
    ```
 
-3. Développez puis vérifiez votre code avec `pnpm -r test` pour vous assurer que l'ensemble des services passent les tests.
+2. **Install dependencies for local development** (requires Internet access):
+   ```bash
+3. **Run all services with Docker Compose**:
+   ```
 
-| Service              | Stack technique  | Port | Description |
-|----------------------|------------------|------|-------------|
-| `service_clients`    | Node.js/Express  | 3000 | Gestion des clients |
+4. **Run tests**:
+
+2. Si pnpm n'est pas installé, exécutez `corepack enable`.
+3. Installez les dépendances avec `pnpm install`.
+4. Développez puis vérifiez votre code avec `pnpm -r test` pour vous assurer que l'ensemble des services passent les tests.
+5. Commitez et poussez votre branche avant d'ouvrir une Pull Request.
 | `service_produits`   | Node.js/Express  | 3002 | Gestion des produits |
 | `service_commande`   | Node.js/Express  | 3001 | Gestion des commandes |
 
