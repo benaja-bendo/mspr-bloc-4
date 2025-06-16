@@ -7,13 +7,13 @@ This repository contains a demonstration platform composed of three microservice
 | Service              | Tech stack      | Port |
 |----------------------|-----------------|------|
 | `service_clients`    | Node.js/Express | 3000 |
-| `service_produits`   | Python/FastAPI  | 3002 |
+| `service_produits`   | Node.js/Express | 3002 |
 | `service_commande`   | Node.js/Express | 3001 |
 
 ## Prerequisites
 
 - Docker and Docker Compose installed
-- Node.js 18+ and Python 3.11+ if you want to run services without Docker
+- Node.js 18+ if you want to run services without Docker
 
 ## Getting Started
 
@@ -21,7 +21,7 @@ This repository contains a demonstration platform composed of three microservice
    ```bash
    cd services/service_clients && npm ci
    cd ../service_commande && npm ci
-   cd ../service_produits && pip install -r requirements.txt
+   cd ../service_produits && npm ci
    ```
 
 2. **Run all services with Docker Compose**:
@@ -32,12 +32,9 @@ This repository contains a demonstration platform composed of three microservice
 
 3. **Run tests**:
    ```bash
-   # Node services
    cd services/service_clients && npm test
    cd ../service_commande && npm test
-
-   # Python service
-   cd ../service_produits && pytest
+   cd ../service_produits && npm test
    ```
 
 ## Basic API Usage
