@@ -18,3 +18,4 @@ describe('service_produits', () => {
     expect(list.body.length).toBe(1);
   });
 });
+
