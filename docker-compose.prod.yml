@@ -1,0 +1,179 @@
+version: "3.8"
+
+services:
+  # Infrastructure
+  zookeeper:
+    image: confluentinc/cp-zookeeper:7.3.0
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+      ZOOKEEPER_TICK_TIME: 2000
+    volumes:
+      - zookeeper_data:/var/lib/zookeeper/data
+      - zookeeper_log:/var/lib/zookeeper/log
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "echo srvr | nc localhost 2181 || exit 1"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  kafka:
+    image: confluentinc/cp-kafka:7.3.0
+    depends_on:
+      - zookeeper
+    environment:
+      KAFKA_BROKER_ID: 1
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR: 1
+      KAFKA_TRANSACTION_STATE_LOG_MIN_ISR: 1
+      KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
+    volumes:
+      - kafka_data:/var/lib/kafka/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "kafka-topics --bootstrap-server localhost:9092 --list"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Bases de données
+  db_clients:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: clients
+    volumes:
+      - clients_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d clients"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db_commandes:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: commandes
+    volumes:
+      - commandes_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d commandes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  db_produits:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: produits
+    volumes:
+      - produits_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d produits"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Services backend
+  service_clients:
+    build:
+      context: ./
+      dockerfile: services/service_clients/Dockerfile.prod
+    environment:
+      PORT: 3000
+      DATABASE_URL: postgres://user:password@db_clients:5432/clients
+      KAFKA_BROKER: kafka:9092
+      NODE_ENV: production
+    ports:
+      - "3000:3000"
+    depends_on:
+      - db_clients
+      - kafka
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  service_commande:
+    build:
+      context: ./
+      dockerfile: services/service_commande/Dockerfile.prod
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://user:password@db_commandes:5432/commandes
+      KAFKA_BROKER: kafka:9092
+      NODE_ENV: production
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db_commandes
+      - kafka
+      - service_clients
+      - service_produits
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  service_produits:
+    build:
+      context: ./
+      dockerfile: services/service_produits/Dockerfile.prod
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgres://user:password@db_produits:5432/produits
+      KAFKA_BROKER: kafka:9092
+      NODE_ENV: production
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db_produits
+      - kafka
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # Frontend
+  service_webshop:
+    build:
+      context: ./
+      dockerfile: services/service_webshop/Dockerfile.prod
+    environment:
+      VITE_API_URL: http://localhost:3000
+      NODE_ENV: production
+    ports:
+      - "4173:4173"
+    depends_on:
+      - service_clients
+      - service_commande
+      - service_produits
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  zookeeper_data:
+  zookeeper_log:
+  kafka_data:
+  clients_data:
+  commandes_data:
+  produits_data:
