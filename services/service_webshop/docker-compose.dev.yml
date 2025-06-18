@@ -1,0 +1,8 @@
+version: "3.8"
+services:
+  webshop:
+    build: .
+    environment:
+      - VITE_API_URL=http://localhost:3000
+    ports:
+      - "5173:4173"

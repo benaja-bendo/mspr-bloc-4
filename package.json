@@ -11,13 +11,16 @@
     "start:clients": "pnpm --filter service_clients start",
     "start:produits": "pnpm --filter service_produits start",
     "start:commande": "pnpm --filter service_commande start",
+    "start:webshop": "pnpm --filter service_webshop start",
     "dev:clients": "pnpm --filter service_clients dev",
     "dev:produits": "pnpm --filter service_produits dev",
     "dev:commande": "pnpm --filter service_commande dev",
+    "dev:webshop": "pnpm --filter service_webshop dev",
     "build": "pnpm -r build",
     "build:clients": "pnpm --filter service_clients build",
     "build:produits": "pnpm --filter service_produits build",
     "build:commande": "pnpm --filter service_commande build",
-    "start:all": "concurrently \"pnpm dev:clients\" \"pnpm dev:produits\" \"pnpm dev:commande\""
+    "build:webshop": "pnpm --filter service_webshop build",
+    "start:all": "concurrently \"pnpm dev:clients\" \"pnpm dev:produits\" \"pnpm dev:commande\" \"pnpm dev:webshop\""
   }
 }

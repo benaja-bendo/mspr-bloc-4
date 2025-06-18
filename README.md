@@ -1,25 +1,6 @@
+# MSRP - Microservices Platform
+
 This repository contains a simple platform composed of three microservices that communicate via Kafka.  The codebase is organised as a **pnpm monorepo** so all services share their dependencies and tooling.  Each service exposes a small REST API and can be run locally using Docker Compose or directly with Node.js.
-
-- [pnpm](https://pnpm.io/) (install with `corepack enable` or `npm install -g pnpm` if it isn't already available)
-
-1. **Enable pnpm via Corepack** (only once):
-   ```bash
-   corepack enable
-   ```
-
-2. **Install dependencies for local development** (requires Internet access):
-   ```bash
-3. **Run all services with Docker Compose**:
-   ```
-
-4. **Run tests**:
-
-2. Si pnpm n'est pas installé, exécutez `corepack enable`.
-3. Installez les dépendances avec `pnpm install`.
-4. Développez puis vérifiez votre code avec `pnpm -r test` pour vous assurer que l'ensemble des services passent les tests.
-5. Commitez et poussez votre branche avant d'ouvrir une Pull Request.
-| `service_produits`   | Node.js/Express  | 3002 | Gestion des produits |
-| `service_commande`   | Node.js/Express  | 3001 | Gestion des commandes |
 
 ## Prérequis
 
@@ -64,7 +45,7 @@ pnpm --version
    pnpm install
    ```
 
-2. **Exécuter tous les services avec Docker Compose** :
+2. **Exécuter tous les services avec Docker Compose en développement** :
    ```bash
    docker compose -f docker/docker-compose.yml up --build
    ```
@@ -79,6 +60,23 @@ pnpm --version
    pnpm start:all
    ```
    Cette méthode est idéale pour le développement local sans Docker.
+
+## Déploiement en production
+
+Pour déployer l'application en production, un fichier `docker-compose.prod.yml` est disponible à la racine du projet. Ce fichier configure tous les services avec leurs dépendances pour un environnement de production.
+
+```bash
+# Construire et lancer tous les services en production
+docker-compose -f docker-compose.prod.yml up -d
+```
+
+Cette commande lance :
+- L'infrastructure (Zookeeper, Kafka)
+- Les bases de données PostgreSQL
+- Les services backend (clients, commande, produits)
+- Le frontend (webshop)
+
+Chaque service dispose également de son propre fichier `docker-compose.prod.yml` et `Dockerfile.prod` pour un déploiement individuel si nécessaire.
 
 ## Exécution des services individuellement
 
@@ -101,7 +99,26 @@ pnpm start:produits
 
 # Service commande
 pnpm start:commande
+
+# Service webshop
+pnpm start:webshop
 ```
+
+## Documentation des services
+
+Chaque service dispose de sa propre documentation détaillée :
+
+- [Service Clients](./services/service_clients/README.md) - Gestion des clients et de leurs informations
+- [Service Commande](./services/service_commande/README.md) - Gestion des commandes et du processus d'achat
+- [Service Produits](./services/service_produits/README.md) - Gestion des produits, des catégories et des stocks
+- [Service Webshop](./services/service_webshop/README.md) - Interface utilisateur React pour les clients
+
+Consultez ces documentations pour des informations spécifiques sur chaque service, notamment :
+- Les prérequis
+- Les instructions de développement
+- Les commandes Docker
+- Les variables d'environnement
+- Les endpoints API
 
 #### Lancer un service spécifique en mode développement
 ```bash

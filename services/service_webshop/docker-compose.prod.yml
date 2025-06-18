@@ -1,0 +1,18 @@
+version: "3.8"
+
+services:
+  service_webshop:
+    build:
+      context: ../../
+      dockerfile: services/service_webshop/Dockerfile.prod
+    environment:
+      VITE_API_URL: http://localhost:3000
+      NODE_ENV: production
+    ports:
+      - "4173:4173"
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:4173"]
+      interval: 30s
+      timeout: 10s
+      retries: 3

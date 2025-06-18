@@ -2,6 +2,6 @@
   "name": "@payetonkawa/kafka-client",
   "version": "0.1.0",
   "main": "js-client/index.js",
-  "type": "commonjs",
+  "type": "module",
   "private": true
 }

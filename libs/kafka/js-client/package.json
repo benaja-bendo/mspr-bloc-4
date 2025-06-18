@@ -1,0 +1,10 @@
+{
+  "name": "@payetonkawa/kafka-js-client",
+  "version": "0.1.0",
+  "main": "index.js",
+  "type": "module",
+  "private": true,
+  "dependencies": {
+    "kafkajs": "^2.2.4"
+  }
+}

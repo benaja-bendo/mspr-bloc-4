@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: produits
+    volumes:
+      - produits_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d produits"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service_produits:
+    build:
+      context: ../../
+      dockerfile: services/service_produits/Dockerfile.prod
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgres://user:password@db:5432/produits
+      KAFKA_BROKER: kafka:9092
+      NODE_ENV: production
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3002/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  produits_data:

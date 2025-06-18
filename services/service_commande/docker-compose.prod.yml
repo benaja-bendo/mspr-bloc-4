@@ -1,0 +1,40 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: commandes
+    volumes:
+      - commandes_data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U user -d commandes"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  service_commande:
+    build:
+      context: ../../
+      dockerfile: services/service_commande/Dockerfile.prod
+    environment:
+      PORT: 3001
+      DATABASE_URL: postgres://user:password@db:5432/commandes
+      KAFKA_BROKER: kafka:9092
+      NODE_ENV: production
+    ports:
+      - "3001:3001"
+    depends_on:
+      - db
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "wget", "-qO-", "http://localhost:3001/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+volumes:
+  commandes_data:

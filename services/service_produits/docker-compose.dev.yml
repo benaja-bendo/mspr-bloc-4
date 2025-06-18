@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: products
+    ports:
+      - "5434:5432"
+    volumes:
+      - data:/var/lib/postgresql/data
+
+  kafka:
+    image: confluentinc/cp-kafka:latest
+    environment:
+      KAFKA_ADVERTISED_LISTENERS: PLAINTEXT://kafka:9092
+      KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+    depends_on:
+      - zookeeper
+    ports:
+      - "9092:9092"
+
+  zookeeper:
+    image: confluentinc/cp-zookeeper:latest
+    environment:
+      ZOOKEEPER_CLIENT_PORT: 2181
+
+  service_produits:
+    build: .
+    environment:
+      PORT: 3002
+      DATABASE_URL: postgres://user:password@db:5432/products
+      KAFKA_BROKER: kafka:9092
+    ports:
+      - "3002:3002"
+    depends_on:
+      - db
+      - kafka
+
+volumes:
+  data:
