@@ -1,0 +1,36 @@
+FROM node:18-alpine AS builder
+WORKDIR /app
+
+# Copier les fichiers de configuration du projet
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY libs/kafka/package.json ./libs/kafka/
+COPY libs/kafka/js-client/package.json ./libs/kafka/js-client/
+COPY services/service_clients/package.json ./services/service_clients/
+
+# Installer les dépendances
+RUN npm install -g pnpm && pnpm install --frozen-lockfile
+
+# Copier les fichiers source
+COPY libs/kafka/js-client/ ./libs/kafka/js-client/
+COPY services/service_clients/tsconfig.json ./services/service_clients/
+COPY services/service_clients/src/ ./services/service_clients/src/
+
+# Compiler le projet
+WORKDIR /app/services/service_clients
+RUN pnpm build
+
+# Image finale
+FROM node:18-alpine
+WORKDIR /app
+
+# Copier les fichiers de production
+COPY --from=builder /app/libs/kafka/js-client/ ./libs/kafka/js-client/
+COPY --from=builder /app/services/service_clients/package.json ./
+COPY --from=builder /app/services/service_clients/dist/ ./dist/
+
+# Installer uniquement les dépendances de production
+RUN npm install --omit=dev
+
+# Exposer le port et définir la commande de démarrage
+EXPOSE 3000
+CMD ["node", "dist/index.js"]

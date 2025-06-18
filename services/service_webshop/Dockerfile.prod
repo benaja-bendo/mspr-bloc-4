@@ -1,0 +1,30 @@
+FROM node:18-alpine AS builder
+WORKDIR /app
+
+# Copier les fichiers de configuration du projet
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+COPY services/service_webshop/package.json ./services/service_webshop/
+
+# Installer les dépendances
+RUN npm install -g pnpm && pnpm install --frozen-lockfile
+
+# Copier les fichiers source
+COPY services/service_webshop/ ./services/service_webshop/
+
+# Compiler le projet
+WORKDIR /app/services/service_webshop
+RUN pnpm build
+
+# Image finale avec Nginx pour servir l'application
+FROM nginx:alpine
+WORKDIR /usr/share/nginx/html
+
+# Copier les fichiers de build
+COPY --from=builder /app/services/service_webshop/dist/ ./
+
+# Copier la configuration Nginx
+COPY services/service_webshop/nginx.conf /etc/nginx/conf.d/default.conf
+
+# Exposer le port et définir la commande de démarrage
+EXPOSE 4173
+CMD ["nginx", "-g", "daemon off;"]
