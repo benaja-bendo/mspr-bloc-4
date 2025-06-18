@@ -1,13 +1,12 @@
 let Kafka;
 try {
-  ({ Kafka } = require('kafkajs'));
+  const kafkajs = await import('kafkajs');
+  Kafka = kafkajs.Kafka;
 } catch {
   // Kafka library is optional during tests
 }
 
-function createKafkaClient(broker) {
+export function createKafkaClient(broker) {
   if (!Kafka) return null;
   return new Kafka({ brokers: [broker] });
 }
-
-module.exports = { createKafkaClient };

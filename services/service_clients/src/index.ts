@@ -1,5 +1,5 @@
 import express, { Request, Response } from 'express';
-import { createKafkaClient } from '../../libs/kafka/js-client/index.js';
+import { createKafkaClient } from '../../../libs/kafka/js-client/index.js';
 
 let Pool: typeof import('pg').Pool | undefined;
 try {
