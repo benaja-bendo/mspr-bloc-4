@@ -9,7 +9,11 @@ describe('service_produits', () => {
   });
 
   test('POST /products creates a product', async () => {
-    const res = await request(app).post('/products').send({ id: 1, name: 'Tea' });
+    const cat = await request(app).post('/categories').send({ name: 'Drinks' });
+    expect(cat.statusCode).toBe(201);
+    const res = await request(app)
+      .post('/products')
+      .send({ name: 'Tea', categoryId: cat.body.id, stock: 10 });
     expect(res.statusCode).toBe(201);
     expect(res.body).toHaveProperty('id');
     expect(res.body.name).toBe('Tea');

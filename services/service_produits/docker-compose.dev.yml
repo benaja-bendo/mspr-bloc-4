@@ -1,11 +1,15 @@
 version: "3.8"
 services:
-  mongo:
-    image: mongo
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: password
+      POSTGRES_DB: products
     ports:
-      - "27017:27017"
+      - "5434:5432"
     volumes:
-      - mongo-data:/data/db
+      - data:/var/lib/postgresql/data
 
   kafka:
     image: confluentinc/cp-kafka:latest
@@ -26,13 +30,13 @@ services:
     build: .
     environment:
       PORT: 3002
-      MONGODB_URI: mongodb://mongo:27017/products
+      DATABASE_URL: postgres://user:password@db:5432/products
       KAFKA_BROKER: kafka:9092
     ports:
       - "3002:3002"
     depends_on:
-      - mongo
+      - db
       - kafka
 
 volumes:
-  mongo-data:
+  data:
