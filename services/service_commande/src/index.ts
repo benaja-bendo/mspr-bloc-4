@@ -46,7 +46,7 @@ async function init() {
         fromBeginning: true,
       });
       await consumer.run({
-        eachMessage: async ({ message }) =>
+        eachMessage: async ({ message }: { message: any }) =>
           console.log(`orders service received: ${message.value}`),
       });
     }
