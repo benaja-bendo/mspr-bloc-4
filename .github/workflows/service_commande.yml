@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'services/service_commande/**'
+      - 'libs/kafka/**'
 
 jobs:
   test:
@@ -23,3 +24,6 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm --filter service_commande test
+        
+      - name: Build
+        run: pnpm --filter service_commande build

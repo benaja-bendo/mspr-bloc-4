@@ -1,23 +1,15 @@
-name: CI
+name: Service Webshop CI
 
 on:
-  pull_request:
   push:
-    branches:
-      - main
-    paths-ignore:
-      - 'services/service_clients/**'
-      - 'services/service_commande/**'
-      - 'services/service_produits/**'
+    paths:
       - 'services/service_webshop/**'
-      - '**.md'
 
 jobs:
   test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v3
-
       - name: Set up Node
         uses: actions/setup-node@v3
         with:
@@ -29,9 +21,8 @@ jobs:
 
       - name: Install dependencies
         run: pnpm install
-
       - name: Run tests
-        run: pnpm -r test
+        run: pnpm --filter service_webshop test
         
       - name: Build
-        run: pnpm -r build
+        run: pnpm --filter service_webshop build

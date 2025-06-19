@@ -4,6 +4,7 @@ on:
   push:
     paths:
       - 'services/service_clients/**'
+      - 'libs/kafka/**'
 
 jobs:
   test:
@@ -23,3 +24,6 @@ jobs:
         run: pnpm install
       - name: Run tests
         run: pnpm --filter service_clients test
+        
+      - name: Build
+        run: pnpm --filter service_clients build
