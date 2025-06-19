@@ -35,7 +35,10 @@ async function init() {
       const consumer = kafka.consumer({ groupId: 'clients-service' });
       await consumer.connect();
       await consumer.subscribe({ topic: 'orders-topic', fromBeginning: true });
-      await consumer.run({ eachMessage: async ({ message }) => console.log(`clients service received: ${message.value}`) });
+      await consumer.run({
+        eachMessage: async ({ message }: { message: any }) =>
+          console.log(`clients service received: ${message.value}`)
+      });
     }
   }
 }
