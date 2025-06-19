@@ -10,7 +10,7 @@
     "outDir": "dist",
     "sourceMap": true,
     "resolveJsonModule": true,
-    "types": ["vitest/globals", "node"]
+    "types": ["vitest/globals", "node", "./types/pg"]
   },
   "include": ["**/*.ts"],
   "exclude": ["node_modules", "dist"]
