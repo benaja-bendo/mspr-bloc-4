@@ -52,7 +52,7 @@ async function init() {
       await consumer.connect();
       await consumer.subscribe({ topic: 'orders-topic', fromBeginning: true });
       await consumer.run({
-        eachMessage: async ({ message }) => {
+        eachMessage: async ({ message }: { message: any }) => {
           if (!message.value) return;
           try {
             const evt = JSON.parse(message.value.toString());
@@ -119,7 +119,7 @@ async function saveProduct(p: Omit<Product, 'id'> & { id?: number }): Promise<Pr
   }
 }
 
-async function listCategories() {
+async function listCategories(): Promise<Category[]> {
   if (pool) {
     const { rows } = await pool.query('SELECT * FROM categories ORDER BY id');
     return rows;
